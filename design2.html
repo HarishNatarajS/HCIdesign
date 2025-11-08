@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MindfulCampus — SDG 3: Good Health & Well-Being</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0e1117; /* dark for discretion in shared spaces */
+        --panel: #131823;
+        --elev: #161c28;
+        --muted: #9fb0c0;
+        --text: #ecf2f8;
+        --brand: #7dd3fc; /* calm cyan */
+        --brand-2: #a7f3d0; /* mint accent */
+        --warn: #f59e0b; /* supportive amber */
+        --danger: #fb7185; /* SOS visible but not alarming red */
+        --ok: #34d399;
+        --focus: 0 0 0 3px rgba(125, 211, 252, 0.45);
+        --radius: 16px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: radial-gradient(
+            1200px 800px at 20% -10%,
+            #12203a 0%,
+            #0e1117 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.35;
+      }
+      a {
+        color: var(--brand);
+        text-decoration: none;
+      }
+      .app {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 16px 84px;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 20px;
+      }
+      /* Header */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: saturate(120%) blur(8px);
+        background: linear-gradient(
+          180deg,
+          rgba(19, 24, 35, 0.85),
+          rgba(19, 24, 35, 0.55)
+        );
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .topwrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .logo-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: conic-gradient(from 210deg, #7dd3fc, #a7f3d0);
+        color: #0b1220;
+        font-weight: 900;
+      }
+      .search {
+        margin-left: auto;
+        position: relative;
+      }
+      .search input {
+        width: 260px;
+        background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 10px 12px 10px 36px;
+        outline: none;
+      }
+      .search input:focus {
+        box-shadow: var(--focus);
+        border-color: #2b3a50;
+      }
+      .search .ico {
+        position: absolute;
+        left: 10px;
+        top: 9px;
+        opacity: 0.7;
+      }
+
+      /* Sidebar */
+      .nav {
+        background: linear-gradient(180deg, var(--panel), #0f1521);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        padding: 12px;
+        position: sticky;
+        top: 76px;
+        height: calc(100vh - 96px);
+        overflow: auto;
+      }
+      .nav h4 {
+        margin: 8px 10px;
+        color: #cfe3f4;
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .nav a {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        color: var(--text);
+        opacity: 0.9;
+      }
+      .nav a:hover,
+      .nav a.active {
+        background: rgba(125, 211, 252, 0.12);
+      }
+      .badge {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: #0b1220;
+        background: var(--brand);
+        border-radius: 999px;
+        padding: 2px 8px;
+      }
+
+      /* Content */
+      .content {
+        display: grid;
+        gap: 18px;
+      }
+      .card {
+        background: linear-gradient(180deg, var(--panel), var(--elev));
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+      .card h3 {
+        margin: 4px 0 10px 0;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .grid.cols-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .grid.cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .grid.cols-2,
+        .grid.cols-3 {
+          grid-template-columns: 1fr;
+        }
+        .search input {
+          width: 100%;
+        }
+      }
+
+      /* Mood chips and sliders */
+      .moods {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        padding: 10px 12px;
+        background: #0f1624;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .chip[aria-pressed="true"] {
+        outline: 2px solid var(--brand);
+        background: rgba(125, 211, 252, 0.1);
+      }
+      .slider {
+        appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 99px;
+        background: #0f1624;
+        outline: none;
+      }
+      .slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--brand);
+        cursor: pointer;
+      }
+
+      /* Privacy toggles */
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .switch {
+        position: relative;
+        width: 48px;
+        height: 28px;
+      }
+      .switch input {
+        display: none;
+      }
+      .knob {
+        position: absolute;
+        inset: 0;
+        background: #0f1624;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .knob::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--muted);
+        transition: all 0.2s ease;
+      }
+      .switch input:checked + .knob {
+        background: rgba(167, 243, 208, 0.2);
+        border-color: #2d3b4f;
+      }
+      .switch input:checked + .knob::after {
+        left: 25px;
+        background: var(--brand-2);
+      }
+
+      .mask {
+        filter: blur(6px);
+        user-select: none;
+      }
+      .mask.revealed {
+        filter: none;
+      }
+
+      /* List + forum */
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+      .li {
+        background: #0f1624;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 12px;
+      }
+      .anon {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .tag {
+        font-size: 0.75rem;
+        background: rgba(167, 243, 208, 0.15);
+        color: #b7ffea;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-left: 6px;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: #0f1624;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .btn:hover {
+        border-color: #2b3a50;
+      }
+      .btn.primary {
+        background: linear-gradient(180deg, #1b2434, #0f1624);
+        border-color: #2b3a50;
+      }
+      .btn.cta {
+        background: linear-gradient(180deg, #7dd3fc, #a7f3d0);
+        color: #0b1220;
+      }
+      .btn.sos {
+        background: linear-gradient(180deg, #fb7185, #f43f5e);
+        color: #0b1220;
+      }
+      .btn.ghost {
+        background: transparent;
+      }
+
+      /* Breathing ring */
+      .breath {
+        display: grid;
+        place-items: center;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(
+          80px 80px at 50% 50%,
+          rgba(167, 243, 208, 0.25),
+          rgba(125, 211, 252, 0.15)
+        );
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        margin: auto;
+      }
+      .breath .dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--brand);
+        animation: inhale 4s ease-in-out infinite;
+      }
+      @keyframes inhale {
+        0% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(2.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 18px;
+        right: 18px;
+        background: #0f1624;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        padding: 12px 14px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        display: none;
+      }
+      .toast.show {
+        display: block;
+      }
+
+      /* Section headers / discreet mode */
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .discreet {
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: #0f1624;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      /* Wireframe helper (commented in HTML) */
+
+      /* Focus */
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible {
+        outline: none;
+        box-shadow: var(--focus);
+      }
+      textarea {
+        width: 100%;
+        min-height: 110px;
+        border-radius: 12px;
+        background: #0f1624;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 10px;
+        resize: vertical;
+      }
+
+      /* Appointments */
+      .formgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .input,
+      select {
+        width: 100%;
+        border-radius: 12px;
+        background: #0f1624;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 10px 12px;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(125, 211, 252, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .pill.ok {
+        background: rgba(52, 211, 153, 0.12);
+        color: #adffdc;
+      }
+      .pill.warn {
+        background: rgba(245, 158, 11, 0.15);
+        color: #ffe0ad;
+      }
+      .pill.danger {
+        background: rgba(251, 113, 133, 0.15);
+        color: #ffd0d7;
+      }
+
+      /* Mini chart (privacy-preserving sparkline) */
+      .spark {
+        height: 40px;
+        width: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(125, 211, 252, 0.12),
+          rgba(167, 243, 208, 0.05)
+        );
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+      .spark .bar {
+        position: absolute;
+        bottom: 0;
+        width: 10px;
+        background: rgba(125, 211, 252, 0.5);
+        border-radius: 6px;
+      }
+
+      /* Footer SOS bar */
+      .foot {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(14, 17, 23, 0),
+          rgba(14, 17, 23, 0.9) 45%,
+          rgba(14, 17, 23, 1)
+        );
+      }
+      .foot .wrap {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar" aria-label="Top navigation">
+      <div class="topwrap">
+        <div class="logo">
+          <div class="logo-badge" aria-hidden="true">MC</div>
+          <div>MindfulCampus</div>
+          <span class="pill" title="Student data is encrypted at rest"
+            >Private by Default</span
+          >
+        </div>
+        <div class="search" role="search">
+          <span class="ico">🔍</span>
+          <input
+            aria-label="Search resources"
+            placeholder="Search resources (breathing, anxiety, study stress)…"
+          />
+        </div>
+        <button
+          class="btn ghost"
+          id="btnDiscreet"
+          title="Hide sensitive text quickly (discreet mode)"
+        >
+          🙈 Discreet
+        </button>
+      </div>
+    </header>
+
+    <main class="app" id="main">
+      <!-- SIDEBAR -->
+      <aside class="nav" aria-label="Section navigation">
+        <h4>Navigate</h4>
+        <a href="#mood" class="active"
+          >😊 Mood Tracker <span class="badge" id="badgeStreak">0d</span></a
+        >
+        <a href="#meditation">🧘‍♀️ Meditation</a>
+        <a href="#forum">👥 Peer Support</a>
+        <a href="#appointments">🗓️ Appointments</a>
+        <a href="#crisis">🚨 Crisis Help</a>
+        <h4>Privacy</h4>
+        <div class="li">
+          <div class="row" style="justify-content: space-between">
+            <div>
+              <strong>Mask sensitive text</strong><br />
+              <span class="hint">Blur journals until you reveal them.</span>
+            </div>
+            <label class="switch" title="Blur sensitive content by default">
+              <input type="checkbox" id="maskToggle" checked />
+              <span class="knob" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div
+            class="row"
+            style="margin-top: 8px; justify-content: space-between"
+          >
+            <div>
+              <strong>Anonymous in forum</strong><br />
+              <span class="hint">Post under alias by default.</span>
+            </div>
+            <label class="switch" title="Post anonymously by default">
+              <input type="checkbox" id="anonToggle" checked />
+              <span class="knob" aria-hidden="true"></span>
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <!-- a) MVC & Privacy-sensitive Mood Tracking -->
+        <div class="card" id="mood" aria-labelledby="mood-head">
+          <div class="section-head">
+            <h3 id="mood-head">Daily Mood Tracking</h3>
+            <span class="discreet"
+              >Your entries are private and stored locally in this demo</span
+            >
+          </div>
+          <!-- MVC NOTE:
+           Model → moodLog {date, moodTag, intensity, notes, flags:{crisis}}
+           View  → chips, slider, masked textarea, sparkline
+           Controller → saveMood(), toggleMask(), detectCrisis()
+           Security (real app):
+             - Encrypt at rest (AES-256, per-user key sealed with Argon2id + server KMS)
+             - On device, Secure Storage / Keychain; in web, WebCrypto + PBKDF2/Argon2
+             - TLS 1.3 in transit; strict authz per resource (userId, scope)
+      -->
+          <div class="grid cols-2">
+            <div class="card">
+              <h4>How are you feeling today?</h4>
+              <div class="moods" role="group" aria-label="Select a mood">
+                <button class="chip" aria-pressed="false" data-m="Calm">
+                  🫧 Calm
+                </button>
+                <button class="chip" aria-pressed="false" data-m="Happy">
+                  🌤️ Happy
+                </button>
+                <button class="chip" aria-pressed="false" data-m="Stressed">
+                  ⏳ Stressed
+                </button>
+                <button class="chip" aria-pressed="false" data-m="Anxious">
+                  🌪️ Anxious
+                </button>
+                <button class="chip" aria-pressed="false" data-m="Low">
+                  🌑 Low
+                </button>
+              </div>
+              <p style="margin: 14px 0 8px">Intensity</p>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value="4"
+                class="slider"
+                id="intensity"
+                aria-label="Intensity slider (1 to 10)"
+              />
+              <p style="margin: 14px 0 8px">Private notes (optional)</p>
+              <textarea
+                id="journal"
+                class="mask"
+                aria-label="Private journal notes (masked)"
+                placeholder="E.g., tough day with deadlines… did a 5-min walk. What helped?"
+              ></textarea>
+              <div
+                class="row"
+                style="justify-content: space-between; margin-top: 10px"
+              >
+                <div class="row">
+                  <label class="switch" title="Blur notes">
+                    <input type="checkbox" id="maskNotes" checked />
+                    <span class="knob" aria-hidden="true"></span>
+                  </label>
+                  <span class="hint">Mask notes</span>
+                </div>
+                <button class="btn primary" id="saveMood">Save entry</button>
+              </div>
+              <p class="hint" style="margin-top: 10px">
+                No one else can see this. In production, this is encrypted
+                end-to-end.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4>Last 7 days (privacy-preserving)</h4>
+              <div class="spark" id="spark"></div>
+              <div
+                class="row"
+                style="margin-top: 10px; gap: 8px; flex-wrap: wrap"
+              >
+                <span class="pill ok" id="streak">Streak: 0 days</span>
+                <span class="pill">Avg intensity: <b id="avgInt">–</b></span>
+                <span class="pill warn"
+                  >Personal tips are tailored locally</span
+                >
+              </div>
+              <div style="margin-top: 10px">
+                <h4>Personalized Recommendation</h4>
+                <div id="advice" class="hint">
+                  Log a mood to see tips (e.g., 4-7 min box breathing, campus
+                  green walk).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- b) Emotional Design / Meditation -->
+        <div class="card" id="meditation">
+          <div class="section-head">
+            <h3>Guided Meditation & Breathing</h3>
+            <span class="discreet">Soothing visuals, neutral language</span>
+          </div>
+          <div class="grid cols-3">
+            <div class="card">
+              <h4>Box Breathing (4-4-4-4)</h4>
+              <div class="breath">
+                <div class="dot" aria-hidden="true"></div>
+              </div>
+              <p class="hint" style="margin: 10px 0">
+                Inhale • Hold • Exhale • Hold (4s each). Repeat 4 cycles.
+              </p>
+              <button
+                class="btn"
+                onclick="speak('Inhale four. Hold four. Exhale four. Hold four.')"
+              >
+                ▶️ Audio cue
+              </button>
+            </div>
+            <div class="card">
+              <h4>Grounding (5-4-3-2-1)</h4>
+              <p>
+                Notice 5 things you can see, 4 touch, 3 hear, 2 smell, 1 taste.
+              </p>
+              <button class="btn">Open guide</button>
+            </div>
+            <div class="card">
+              <h4>Mindful Study Break (3 min)</h4>
+              <p>Short guided session to reset between study blocks.</p>
+              <button class="btn">Start session</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- b) Peer Support (moderated) -->
+        <div class="card" id="forum">
+          <div class="section-head">
+            <h3>Peer Support (Moderated)</h3>
+            <span class="discreet"
+              >Anonymous by default • Content filters on</span
+            >
+          </div>
+          <div class="list" aria-live="polite" aria-relevant="additions">
+            <div class="li">
+              <div class="row" style="justify-content: space-between">
+                <div>
+                  <strong>Study pressure tips?</strong>
+                  <span class="tag">Student-led</span>
+                </div>
+                <span class="anon">Posted as: @CalmFern</span>
+              </div>
+              <p class="hint">
+                Remember: This space is supportive. If you're in crisis, use the
+                SOS below.
+              </p>
+              <p>
+                Try the Pomodoro 25/5 and a short walk. Anyone wants to share
+                routines?
+              </p>
+            </div>
+            <div class="li">
+              <div class="row" style="justify-content: space-between">
+                <div>
+                  <strong>Test anxiety</strong>
+                  <span class="tag">Moderator note</span>
+                </div>
+                <span class="anon">Guideline: Be kind, no diagnoses</span>
+              </div>
+              <p>
+                Common and valid. Breathing and grounding can help; counseling
+                is available via Appointments.
+              </p>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 10px">
+            <input
+              class="input"
+              id="forumMsg"
+              placeholder="Share support (no personal identifiers). Anonymous is on."
+              aria-label="Write a supportive message"
+            />
+            <button class="btn" id="postMsg">Post</button>
+          </div>
+          <p class="hint">
+            Moderation pipeline (Controller): profanity filter → crisis keyword
+            scan → rate-limit → store (Model, encrypted) → publish (View).
+          </p>
+        </div>
+
+        <!-- b) Appointments -->
+        <div class="card" id="appointments">
+          <div class="section-head">
+            <h3>Counseling Appointments</h3>
+            <span class="discreet"
+              >You control what is shared with counselors</span
+            >
+          </div>
+          <div class="formgrid">
+            <div class="card">
+              <label
+                >Date & time<br /><input
+                  type="datetime-local"
+                  class="input"
+                  id="slot"
+              /></label>
+              <label style="margin-top: 10px"
+                >Mode<br />
+                <select id="mode" class="input">
+                  <option value="in-person">In-person</option>
+                  <option value="video">Video call</option>
+                </select>
+              </label>
+              <label style="margin-top: 10px"
+                >Topic (optional, private)
+                <input
+                  class="input"
+                  id="topic"
+                  placeholder="e.g., exam stress"
+                />
+              </label>
+              <div
+                class="row"
+                style="margin-top: 10px; justify-content: space-between"
+              >
+                <div class="row">
+                  <label
+                    class="switch"
+                    title="Share last 3 mood tags with counselor (consent)"
+                  >
+                    <input type="checkbox" id="shareMood" />
+                    <span class="knob"></span>
+                  </label>
+                  <span class="hint">Share summary (opt-in)</span>
+                </div>
+                <button class="btn primary" id="book">Book</button>
+              </div>
+              <p class="hint" style="margin-top: 10px">
+                Controller will check availability, create iCal, set reminders
+                (email/SMS/push).
+              </p>
+            </div>
+            <div class="card">
+              <h4>Upcoming</h4>
+              <div id="upcoming" class="list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- c) Crisis Intervention -->
+        <div class="card" id="crisis">
+          <div class="section-head">
+            <h3>Emergency Crisis Help</h3>
+            <span class="discreet"
+              >Immediate access • High contrast • Large targets</span
+            >
+          </div>
+          <!-- MVC:
+           Model → crisisSignals {ts, keyword, intensity, from:mood/form}
+           Controller → onSevereDistress(): showOverlay(); dial(); notifyOnCallDuty(); create safety plan task.
+           View → prominent SOS, hotline sheet, breathing module, location permission prompt.
+      -->
+          <div class="grid cols-2">
+            <div class="card">
+              <h4>Quick Actions</h4>
+              <div class="row" style="gap: 10px; flex-wrap: wrap">
+                <a
+                  class="btn sos"
+                  href="tel:112"
+                  aria-label="Call emergency services now"
+                  >🚨 Call 112</a
+                >
+                <a
+                  class="btn cta"
+                  href="tel:+91-8046110007"
+                  aria-label="Call NIMHANS mental health helpline"
+                  >📞 NIMHANS</a
+                >
+                <button class="btn" id="contactCounselor">
+                  👩‍⚕️ Contact On-call Counselor
+                </button>
+              </div>
+              <p class="hint" style="margin-top: 10px">
+                In an emergency, calling is fastest. Your location is NOT shared
+                unless you allow it.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Rapid Calm</h4>
+              <div class="breath">
+                <div class="dot" aria-hidden="true"></div>
+              </div>
+              <div class="row" style="margin-top: 10px; gap: 8px">
+                <button
+                  class="btn"
+                  onclick="speak('Inhale four. Hold four. Exhale four. Hold four.')"
+                >
+                  ▶️ Audio cue
+                </button>
+                <button class="btn" id="bigText">Big text mode</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 12px">
+            <h4>Safety Plan (private)</h4>
+            <textarea
+              class="mask"
+              id="safetyPlan"
+              placeholder="People I can call… Places that feel safe… Things I can do…"
+            ></textarea>
+            <div
+              class="row"
+              style="margin-top: 10px; justify-content: space-between"
+            >
+              <div class="row">
+                <label class="switch">
+                  <input type="checkbox" id="maskSafety" checked />
+                  <span class="knob"></span>
+                </label>
+                <span class="hint">Mask plan</span>
+              </div>
+              <button class="btn" id="saveSafety">Save plan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Persistent crisis footer -->
+    <div class="foot" role="region" aria-label="Quick SOS bar">
+      <div class="wrap">
+        <div class="row" style="gap: 8px; align-items: center">
+          <strong>Need help now?</strong>
+          <span class="hint">You’re not alone. Help is one tap away.</span>
+        </div>
+        <div class="row" style="gap: 8px">
+          <a class="btn sos" href="#crisis">🚨 Open Crisis Panel</a>
+          <a class="btn cta" href="tel:112">Call 112</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      Saved securely (demo).
+    </div>
+
+    <script>
+      /* ======= Lightweight Controller Logic (Demo) ======= */
+
+      /* Privacy toggles (View ↔ Controller) */
+      const maskToggle = document.getElementById("maskToggle");
+      const anonToggle = document.getElementById("anonToggle");
+      const discreetBtn = document.getElementById("btnDiscreet");
+
+      function applyMasking() {
+        document.querySelectorAll(".mask").forEach((el) => {
+          if (maskToggle.checked) el.classList.remove("revealed");
+          else el.classList.add("revealed");
+        });
+      }
+      maskToggle.addEventListener("change", applyMasking);
+      document.getElementById("maskNotes").addEventListener("change", (e) => {
+        document
+          .getElementById("journal")
+          .classList.toggle("revealed", !e.target.checked);
+      });
+      document.getElementById("maskSafety").addEventListener("change", (e) => {
+        document
+          .getElementById("safetyPlan")
+          .classList.toggle("revealed", !e.target.checked);
+      });
+      discreetBtn.addEventListener("click", () => {
+        document.body.style.filter = "grayscale(1)"; // quick discreet view
+        setTimeout(() => {
+          document.body.style.filter = "";
+        }, 2500);
+      });
+      applyMasking();
+
+      /* Mood selection chips */
+      let selectedMood = null;
+      document.querySelectorAll(".chip").forEach((ch) => {
+        ch.addEventListener("click", () => {
+          document
+            .querySelectorAll(".chip")
+            .forEach((c) => c.setAttribute("aria-pressed", "false"));
+          ch.setAttribute("aria-pressed", "true");
+          selectedMood = ch.dataset.m;
+        });
+      });
+
+      /* Fake storage (Model placeholder) */
+      const model = {
+        moodLog: JSON.parse(localStorage.getItem("moodLog") || "[]"), // [{ts, mood, intensity, notes, crisis:false}]
+        appointments: JSON.parse(localStorage.getItem("appts") || "[]"),
+        safetyPlan: localStorage.getItem("safetyPlan") || "",
+      };
+      // NOTE (security real app): encrypt before persisting (WebCrypto AES-GCM per user key)
+
+      /* Save mood entry + crisis detection */
+      function showToast(msg = "Saved securely (demo).") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1900);
+      }
+      function detectCrisis(mood, intensity, notes) {
+        const keywords = [
+          "hopeless",
+          "harm",
+          "suicide",
+          "hurt",
+          "end it",
+          "can’t go on",
+          "kill",
+        ];
+        const hit = (notes || "").toLowerCase();
+        const flagged = intensity >= 9 || keywords.some((k) => hit.includes(k));
+        return flagged;
+      }
+      document.getElementById("saveMood").addEventListener("click", () => {
+        if (!selectedMood) {
+          showToast("Select a mood first.");
+          return;
+        }
+        const intensity = parseInt(
+          document.getElementById("intensity").value,
+          10
+        );
+        const notes = document.getElementById("journal").value.trim();
+        const crisis = detectCrisis(selectedMood, intensity, notes);
+
+        const entry = {
+          ts: Date.now(),
+          mood: selectedMood,
+          intensity,
+          notes,
+          crisis,
+        };
+        model.moodLog.push(entry);
+        localStorage.setItem("moodLog", JSON.stringify(model.moodLog));
+        updateSpark();
+        advise(entry);
+        updateStreak();
+        showToast(
+          crisis
+            ? "We noticed strong distress. Crisis tools are highlighted below."
+            : "Mood saved."
+        );
+        if (crisis) escalate(entry);
+        document.getElementById("journal").value = "";
+      });
+
+      /* Sparkline bars – privacy preserving (only intensities, no labels) */
+      function updateSpark() {
+        const spark = document.getElementById("spark");
+        spark.innerHTML = "";
+        const last7 = model.moodLog.slice(-7);
+        last7.forEach((e, i) => {
+          const h = (e.intensity / 10) * 38 + 2;
+          const bar = document.createElement("div");
+          bar.className = "bar";
+          bar.style.height = h + "px";
+          bar.style.left = i * 14 + 8 + "px";
+          bar.title = `Intensity ${e.intensity}`;
+          spark.appendChild(bar);
+        });
+        document.getElementById("avgInt").textContent = last7.length
+          ? (last7.reduce((a, b) => a + b.intensity, 0) / last7.length).toFixed(
+              1
+            )
+          : "–";
+      }
+      updateSpark();
+
+      /* Simple streak calc (days with any entry) */
+      function updateStreak() {
+        const days = new Set(
+          model.moodLog.map((e) => new Date(e.ts).toDateString())
+        );
+        const streak = days.size;
+        document.getElementById(
+          "streak"
+        ).textContent = `Streak: ${streak} days`;
+        document.getElementById("badgeStreak").textContent = `${streak}d`;
+      }
+      updateStreak();
+
+      /* Personalized tips (local, non-stigmatizing) */
+      function advise(entry) {
+        const out = document.getElementById("advice");
+        let msg = "Nice job checking in.";
+        if (entry.intensity <= 3)
+          msg = "Keep doing what works—maybe share a kind note with yourself.";
+        if (entry.intensity >= 4 && entry.intensity <= 6)
+          msg = "Try a 4-minute box breathing or a short campus walk.";
+        if (entry.intensity >= 7 && entry.intensity <= 8)
+          msg =
+            "Consider a grounding exercise and a drink of water. You can also book a counselor.";
+        if (entry.intensity >= 9)
+          msg =
+            "You deserve support. The Crisis panel below can help right now, or book with a counselor.";
+        out.textContent = msg;
+      }
+
+      /* c) Escalation controller */
+      function escalate(entry) {
+        // UI priority: bring crisis card into view, highlight CTA
+        location.hash = "#crisis";
+        document.querySelector("#crisis .btn.sos").focus();
+        // (Real app) Controller would:
+        // - show safety overlay
+        // - offer one-tap call; optionally notify on-call counselor if consented
+        // - log crisisSignal (encrypted)
+      }
+
+      /* Forum post (anonymous by default) */
+      document.getElementById("postMsg").addEventListener("click", () => {
+        const val = document.getElementById("forumMsg").value.trim();
+        if (!val) return;
+        const li = document.createElement("div");
+        li.className = "li";
+        const alias = anonToggle.checked ? "@AnonStudent" : "@Me";
+        li.innerHTML = `<div class="row" style="justify-content:space-between">
+    <div><strong>New message</strong> <span class="tag">Pending mod</span></div>
+    <span class="anon">Posted as: ${alias}</span>
+  </div><p>${val.replace(/[<>]/g, "")}</p>`;
+        document.querySelector("#forum .list").prepend(li);
+        document.getElementById("forumMsg").value = "";
+        showToast("Submitted to moderation.");
+      });
+
+      /* Appointments */
+      document.getElementById("book").addEventListener("click", () => {
+        const slot = document.getElementById("slot").value;
+        if (!slot) {
+          showToast("Pick a date/time.");
+          return;
+        }
+        const mode = document.getElementById("mode").value;
+        const topic = (document.getElementById("topic").value || "").slice(
+          0,
+          120
+        );
+        const share = document.getElementById("shareMood").checked;
+        const appt = { id: crypto.randomUUID(), slot, mode, topic, share };
+        model.appointments.push(appt);
+        localStorage.setItem("appts", JSON.stringify(model.appointments));
+        renderAppts();
+        showToast("Appointment booked.");
+      });
+      function renderAppts() {
+        const wrap = document.getElementById("upcoming");
+        wrap.innerHTML = "";
+        if (!model.appointments.length) {
+          wrap.innerHTML = '<p class="hint">No upcoming sessions.</p>';
+          return;
+        }
+        model.appointments
+          .slice(-5)
+          .reverse()
+          .forEach((a) => {
+            const d = new Date(a.slot);
+            const el = document.createElement("div");
+            el.className = "li";
+            el.innerHTML = `<div class="row" style="justify-content:space-between">
+        <div><strong>${d.toLocaleString()}</strong> • ${a.mode}</div>
+        <span class="pill ${a.share ? "ok" : "warn"}">${
+              a.share ? "Sharing summary" : "Private"
+            }</span>
+      </div>
+      <div class="hint">${
+        a.topic ? "Topic: " + a.topic : "No topic shared"
+      }</div>`;
+            wrap.appendChild(el);
+          });
+      }
+      renderAppts();
+
+      /* Crisis helpers */
+      document.getElementById("saveSafety").addEventListener("click", () => {
+        const v = document.getElementById("safetyPlan").value;
+        model.safetyPlan = v;
+        localStorage.setItem("safetyPlan", v);
+        showToast("Safety plan saved.");
+      });
+      document
+        .getElementById("contactCounselor")
+        .addEventListener("click", () => {
+          showToast("On-call counselor alerted (demo).");
+        });
+      document.getElementById("bigText").addEventListener("click", () => {
+        document.body.style.fontSize = "18px";
+        setTimeout(() => (document.body.style.fontSize = ""), 60 * 1000);
+      });
+
+      /* Restore masked fields */
+      document.getElementById("safetyPlan").value = model.safetyPlan;
+
+      /* Minimal speech synthesis (no external deps) */
+      function speak(text) {
+        try {
+          const u = new SpeechSynthesisUtterance(text);
+          speechSynthesis.speak(u);
+        } catch (e) {}
+      }
+    </script>
+
+    <!-- === MVC EXPLANATION (for your report) ===
+a) MVC for privacy-sensitive features
+Model:
+  - moodLog(ts, moodTag, intensity, notes, crisisFlag) ENCRYPTED at rest (AES-256-GCM), per-user key (Argon2id + server-side KMS wrapping).
+  - journalEntry, sessionHistory, appointment(id, slot, mode, topic, shareFlag) with minimum fields → data minimization.
+  - auditLog (non-sensitive, for access control).
+View:
+  - Masked UI (blur by default), discreet mode, anonymous forum identity, neutral colors (teals/mints), crisis CTAs high-contrast.
+  - Privacy-preserving charts: sparklines of intensity only; no dates or labels by default.
+Controller:
+  - AuthN: OAuth2/OIDC + MFA optional; sessions with HttpOnly Secure SameSite=strict cookies.
+  - AuthZ: resource-level checks (userId owner), policy engine (RBAC: Student, Counselor, Moderator; ABAC for consent flags).
+  - Input validation, rate limiting, CSRF protect, content moderation, crisis keyword detection, escalation workflow.
+Why MVC helps security:
+  - Clear separation allows centralized security in Controllers/Middleware;
+  - Models enforce encryption and schema constraints; Views never see raw secrets; Controllers gate access consistently.
+
+b) Emotional design & UX
+  - Color psychology: calm cyan/mint; avoid harsh reds except SOS; dark theme for discretion.
+  - Microcopy: non-judgmental, validating, action-oriented, short.
+  - Feedback: gentle toasts; streaks without pressure; tips not diagnoses.
+  - Accessibility: large tap targets, big-text mode, high contrast CTAs, ARIA roles/live regions, persistent SOS.
+
+c) Crisis intervention
+  - UI priority: persistent footer SOS; crisis page promotes call-first; single-tap hotline.
+  - Controller escalation: detectCrisis() → focus SOS → (real) offer call, notify on-call counselor (with consent), log signal.
+  - Model triggers: intensity≥9 or keyword hits set crisisFlag; store minimal metadata.
+
+=== End notes === -->
+  </body>
+</html>
